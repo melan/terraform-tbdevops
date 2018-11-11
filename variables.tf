@@ -22,3 +22,8 @@ variable "dd_app_key" {
   description = "DataDog APP Key"
   type        = "string"
 }
+
+variable "dd_external_id" {
+  description = "ExternalID for AWS to DataDog integration"
+  type        = "string"
+}

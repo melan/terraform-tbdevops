@@ -58,7 +58,8 @@ module "east-west-route" {
 
 // configure datadog
 module "datadog" {
-  source     = "modules/datadog"
-  dd_api_key = "${var.dd_api_key}"
-  dd_app_key = "${var.dd_app_key}"
+  source         = "modules/datadog"
+  dd_api_key     = "${var.dd_api_key}"
+  dd_app_key     = "${var.dd_app_key}"
+  dd_external_id = "${var.dd_external_id}"
 }
