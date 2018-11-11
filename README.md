@@ -35,6 +35,10 @@ in the module is called with `provider = ...` parameter to specify in what regio
 This module integrates AWS and DataDog, it creates providers to both of the services and uses the providers for different 
 resources. 
 
+## Diagram of the infrastructure we build
+
+![Diagram of the infrastructure we build](terraform-tbdevops.png)
+
 # How to deploy the infrastructure
 
 ## Prerequisites
