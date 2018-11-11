@@ -14,12 +14,14 @@ locals {
 }
 
 module "vpc-east" {
-  source         = "modules/vpc"
-  name           = "atlantic"
-  ip_to_ssh_from = "${local.ssh_cidr}"
-  ssh_public_key = "${var.ssh_public_key}"
-  cidr_block     = "${local.east_cidr}"
-  tags           = "${local.tags}"
+  source               = "modules/vpc"
+  name                 = "atlantic"
+  ip_to_ssh_from       = "${local.ssh_cidr}"
+  ssh_public_key       = "${var.ssh_public_key}"
+  cidr_block           = "${local.east_cidr}"
+  tags                 = "${local.tags}"
+  dd_api_token         = "${var.dd_api_key}"
+  ssh_private_key_file = "${var.ssh_private_key_file}"
 
   providers {
     aws = "aws.east"
@@ -27,12 +29,14 @@ module "vpc-east" {
 }
 
 module "vpc-west" {
-  source         = "modules/vpc"
-  name           = "pacific"
-  ip_to_ssh_from = "${local.ssh_cidr}"
-  ssh_public_key = "${var.ssh_public_key}"
-  cidr_block     = "${local.west_cidr}"
-  tags           = "${local.tags}"
+  source               = "modules/vpc"
+  name                 = "pacific"
+  ip_to_ssh_from       = "${local.ssh_cidr}"
+  ssh_public_key       = "${var.ssh_public_key}"
+  cidr_block           = "${local.west_cidr}"
+  tags                 = "${local.tags}"
+  dd_api_token         = "${var.dd_api_key}"
+  ssh_private_key_file = "${var.ssh_private_key_file}"
 
   providers {
     aws = "aws.west"
@@ -50,4 +54,11 @@ module "east-west-route" {
   peer_vpc_id         = "${module.vpc-west.vpc_id}"
   peer_route_table_id = "${module.vpc-west.route_table_id}"
   peer_cidr           = "${local.west_cidr}"
+}
+
+// configure datadog
+module "datadog" {
+  source     = "modules/datadog"
+  dd_api_key = "${var.dd_api_key}"
+  dd_app_key = "${var.dd_app_key}"
 }

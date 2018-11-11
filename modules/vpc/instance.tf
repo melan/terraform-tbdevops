@@ -19,6 +19,14 @@ resource "aws_key_pair" "ssh_key" {
   public_key = "${var.ssh_public_key}"
 }
 
+data "template_file" "install_dd_script" {
+  template = "${file("${path.module}/templates/install_dd_agent.sh")}"
+
+  vars {
+    DD_API_KEY = "${var.dd_api_token}"
+  }
+}
+
 resource "aws_instance" "test" {
   count                       = "${length(data.aws_availability_zones.available.names)}"
   ami                         = "${data.aws_ami.ubuntu.id}"
@@ -31,6 +39,31 @@ resource "aws_instance" "test" {
 
   tags {
     Name = "${var.name}-${element(aws_subnet.subnet.*.availability_zone, count.index)}-inst"
+  }
+
+  provisioner "file" {
+    content     = "${data.template_file.install_dd_script.rendered}"
+    destination = "/tmp/install_dd_agent.sh"
+
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = "${file(var.ssh_private_key_file)}"
+    }
+  }
+
+  provisioner "remote-exec" {
+    connection {
+      type        = "ssh"
+      user        = "ubuntu"
+      private_key = "${file(var.ssh_private_key_file)}"
+    }
+
+    inline = [
+      "chmod +x /tmp/install_dd_agent.sh",
+      "/tmp/install_dd_agent.sh",
+      "rm -f /tmp/install_dd_agent.sh",
+    ]
   }
 
   depends_on = ["aws_internet_gateway.igw"]

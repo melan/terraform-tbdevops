@@ -12,3 +12,7 @@ variable "cidr_block" {}
 variable "ip_to_ssh_from" {}
 
 variable "ssh_public_key" {}
+
+variable "ssh_private_key_file" {}
+
+variable "dd_api_token" {}
