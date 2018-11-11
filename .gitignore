@@ -1,0 +1,7 @@
+.terraform
+*.tfstate
+*.tfstate.backup
+*.tfplan
+!terraform.tfstate.d/tbdevops/.exists
+tbdevops
+tbdevops.pub
